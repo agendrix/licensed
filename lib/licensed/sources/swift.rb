@@ -8,7 +8,7 @@ module Licensed
     class Swift < Source
       def enabled?
         return unless Licensed::Shell.tool_available?("xcodebuild")
-        @derived_data_path = get_derived_data_path
+        @derived_data_path = derived_data_path
         File.exist?(package_resolved_file_path)
       end
 
