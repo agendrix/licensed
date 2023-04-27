@@ -39,12 +39,14 @@ module Licensed
       def cocoapods_dependencies_json
         args = ["dependencies", "--include-path"]
         args << "--targets=#{targets.join(",")}" if targets.any?
-
+        puts "pod_command: #{pod_command}"
+        puts "args: #{args}"
         output = Licensed::Shell.execute(*pod_command, *args, allow_failure: true)
         if output.include? "Unknown command"
           raise Licensed::Sources::Source::Error, MISSING_PLUGIN_MESSAGE
         end
 
+        puts "args: #{output}"
         JSON.parse(output)
       rescue JSON::ParserError => e
         message = "Licensed was unable to parse the output from 'pod dependencies'. JSON Error: #{e.message}"
