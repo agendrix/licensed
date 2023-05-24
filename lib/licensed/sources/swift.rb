@@ -6,9 +6,14 @@ require "uri"
 module Licensed
   module Sources
     class Swift < Source
-      def enabled?
+      def initialize(configuration)
+        super
         return unless Licensed::Shell.tool_available?("xcodebuild")
-        @derived_data_path = derived_data_path
+        set_derived_data_path
+      end
+
+      def enabled?
+        return unless @derived_data_path
         File.exist?(package_resolved_file_path)
       end
 
@@ -62,8 +67,9 @@ module Licensed
         File.join(config.pwd, "ios.xcworkspace/xcshareddata/swiftpm", "Package.resolved")
       end
 
-      def derived_data_path
-        %x(xcodebuild -showBuildSettings $@ | grep -m 1 "BUILD_DIR" | grep -oEi "\/.*" | sed 's#/Build/Products##').rstrip
+      def set_derived_data_path
+        build_dir =  JSON.parse(`xcodebuild -showBuildSettings $@ -json`).first.dig("buildSettings", "BUILD_DIR")
+        @derived_data_path ||= build_dir.delete_suffix("/Build/Products")
       end
     end
   end
