@@ -6,16 +6,22 @@ require "uri"
 module Licensed
   module Sources
     class Swift < Source
+      def initialize(configuration)
+        super
+        return unless Licensed::Shell.tool_available?("xcodebuild")
+        set_derived_data_path
+      end
+
       def enabled?
-        return unless Licensed::Shell.tool_available?("swift") && swift_package?
+        return unless @derived_data_path
         File.exist?(package_resolved_file_path)
       end
 
       def enumerate_dependencies
         pins.map { |pin|
-          name = pin["package"]
+          name = pin["identity"]
           version = pin.dig("state", "version")
-          path = dependency_path_for_url(pin["repositoryURL"])
+          path = dependency_path_for_url(pin["location"])
           error = "Unable to determine project path from #{url}" unless path
 
           Dependency.new(
@@ -25,7 +31,7 @@ module Licensed
             errors: Array(error),
             metadata: {
               "type"      => Swift.type,
-              "homepage"  => homepage_for_url(pin["repositoryURL"])
+              "homepage"  => homepage_for_url(pin["location"])
             }
           )
         }
@@ -38,7 +44,7 @@ module Licensed
 
         @pins = begin
           json = JSON.parse(File.read(package_resolved_file_path))
-          json.dig("object", "pins")
+          json.dig("pins")
         rescue => e
           message = "Licensed was unable to read the Package.resolved file. Error: #{e.message}"
           raise Licensed::Sources::Source::Error, message
@@ -46,8 +52,8 @@ module Licensed
       end
 
       def dependency_path_for_url(url)
-        last_path_component = URI(url).path.split("/").last.sub(/\.git$/, "")
-        File.join(config.pwd, ".build", "checkouts", last_path_component)
+        last_path_component = URI(url).path.split("/").last.sub(/\.git$/, "").rstrip
+        File.join(@derived_data_path, "SourcePackages", "checkouts", last_path_component)
       rescue URI::InvalidURIError
       end
 
@@ -58,11 +64,12 @@ module Licensed
       end
 
       def package_resolved_file_path
-        File.join(config.pwd, "Package.resolved")
+        File.join(config.pwd, "ios.xcworkspace/xcshareddata/swiftpm", "Package.resolved")
       end
 
-      def swift_package?
-        Licensed::Shell.success?("swift", "package", "describe")
+      def set_derived_data_path
+        build_dir =  JSON.parse(`xcodebuild -showBuildSettings $@ -json`).first.dig("buildSettings", "BUILD_DIR")
+        @derived_data_path = build_dir.delete_suffix("/Build/Products")
       end
     end
   end
