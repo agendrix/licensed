@@ -69,7 +69,7 @@ module Licensed
 
       def set_derived_data_path
         build_dir =  JSON.parse(`xcodebuild -showBuildSettings $@ -json`).first.dig("buildSettings", "BUILD_DIR")
-        @derived_data_path ||= build_dir.delete_suffix("/Build/Products")
+        @derived_data_path = build_dir.delete_suffix("/Build/Products")
       end
     end
   end
