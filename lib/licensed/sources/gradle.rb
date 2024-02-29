@@ -42,8 +42,8 @@ module Licensed
       end
 
       def enabled?
-        file_exists = File.exist?(config.pwd.join("build.gradle")) || File.exist?(config.pwd.join("build.gradle.kts"))
-        !executable.to_s.empty? && file_exists
+        build_gradle_exists = File.exist?(config.pwd.join("build.gradle")) || File.exist?(config.pwd.join("build.gradle.kts"))
+        !executable.to_s.empty? && build_gradle_exists
       end
 
       def enumerate_dependencies
