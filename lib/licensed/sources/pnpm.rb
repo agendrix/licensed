@@ -18,19 +18,24 @@ module Licensed
       end
 
       def enumerate_dependencies
-        packages.map do |package|
-          name_with_version = "#{package["name"]}@#{package["version"]}"
-          Dependency.new(
-            name: name_with_version,
-            version: package["version"],
-            path: package["path"],
-            metadata: {
-              "type"     => PNPM.type,
-              "name"     => package["name"],
-              "summary"  => package["description"],
-              "homepage" => package["homepage"]
-            }
-          )
+        packages.flat_map do |package|
+          versions = package.key?("versions") ? package["versions"] : [package["version"]]
+          paths = package.key?("paths") ? package["paths"] : [package["path"]]
+
+          versions.zip(paths).map do |version, path|
+            name_with_version = "#{package["name"]}@#{version}"
+            Dependency.new(
+              name: name_with_version,
+              version: version,
+              path: path,
+              metadata: {
+                "type"     => PNPM.type,
+                "name"     => package["name"],
+                "summary"  => package["description"],
+                "homepage" => package["homepage"]
+              }
+            )
+          end
         end
       end
 

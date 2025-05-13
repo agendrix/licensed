@@ -4,9 +4,9 @@ require "tmpdir"
 
 if Licensed::Shell.tool_available?("pipenv")
   describe Licensed::Sources::Pipenv do
-    let (:fixtures) { File.expand_path("../../fixtures/pipenv", __FILE__) }
-    let (:config)   { Licensed::AppConfiguration.new({ "source_path" => Dir.pwd }) }
-    let (:source)   { Licensed::Sources::Pipenv.new(config) }
+    let(:fixtures) { File.expand_path("../../fixtures/pipenv", __FILE__) }
+    let(:config)   { Licensed::AppConfiguration.new({ "source_path" => Dir.pwd }) }
+    let(:source)   { Licensed::Sources::Pipenv.new(config) }
 
     describe "enabled?" do
       it "is true if pipenv source is available" do
@@ -62,6 +62,7 @@ if Licensed::Shell.tool_available?("pipenv")
       it "finds license contents from .dist-info/license_files" do
         Dir.chdir fixtures do
           dep = source.dependencies.detect { |d| d.name == "datadog" }
+          assert dep
           assert dep.path.end_with?("license_files")
           refute_empty dep.license_files
         end

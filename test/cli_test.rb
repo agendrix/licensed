@@ -2,8 +2,8 @@
 require "test_helper"
 
 describe "licensed" do
-  let (:root) { File.expand_path("../../", __FILE__) }
-  let (:config_path) { File.join(root, "test/fixtures/cli/.licensed.yml") }
+  let(:root) { File.expand_path("../../", __FILE__) }
+  let(:config_path) { File.join(root, "test/fixtures/cli/.licensed.yml") }
 
   before do
     Dir.chdir root

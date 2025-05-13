@@ -48,7 +48,7 @@ module Licensed
       end
 
       def packages
-        root_dependencies = package_metadata["dependencies"]
+        root_dependencies = package_metadata["dependencies"] || {}
         recursive_dependencies(root_dependencies).each_with_object({}) do |(name, results), hsh|
           results.uniq! { |package| package["version"] }
           if results.size == 1

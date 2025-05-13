@@ -106,59 +106,57 @@ module Licensed
           @nuspec_remote_license_file = Licensee::ProjectFiles::LicenseFile.new(license_content, { uri: match[1] }) if license_content
         end
 
-        class << self
-          def strip_html(html)
-            return unless html
+        def self.strip_html(html)
+          return unless html
 
-            return html unless html.downcase.include?("<html")
-            ReverseMarkdown.convert(html, unknown_tags: :bypass)
-          end
+          return html unless html.downcase.include?("<html")
+          ReverseMarkdown.convert(html, unknown_tags: :bypass)
+        end
 
-          def ignored_url?(url)
-            # Many Microsoft packages that now use <license> use this for <licenseUrl>
-            # No need to fetch this page - it just contains NuGet documentation
-            url == "https://aka.ms/deprecateLicenseUrl"
-          end
+        def self.ignored_url?(url)
+          # Many Microsoft packages that now use <license> use this for <licenseUrl>
+          # No need to fetch this page - it just contains NuGet documentation
+          url == "https://aka.ms/deprecateLicenseUrl"
+        end
 
-          def text_content_url(url)
-            # Convert github file URLs to raw URLs
-            return url unless match = url.match(/https?:\/\/(?:www\.)?github.com\/([^\/]+)\/([^\/]+)\/blob\/(.*)/i)
-            "https://github.com/#{match[1]}/#{match[2]}/raw/#{match[3]}"
-          end
+        def self.text_content_url(url)
+          # Convert github file URLs to raw URLs
+          return url unless match = url.match(/https?:\/\/(?:www\.)?github.com\/([^\/]+)\/([^\/]+)\/blob\/(.*)/i)
+          "https://github.com/#{match[1]}/#{match[2]}/raw/#{match[3]}"
+        end
 
-          def retrieve_license(url)
-            return unless url
-            return if ignored_url?(url)
+        def self.retrieve_license(url)
+          return unless url
+          return if ignored_url?(url)
 
-            # Transform URLs that are known to return HTML but have a corresponding text-based URL
-            text_url = text_content_url(url)
+          # Transform URLs that are known to return HTML but have a corresponding text-based URL
+          text_url = text_content_url(url)
 
-            raw_content = fetch_content(text_url)
-            strip_html(raw_content)
-          end
+          raw_content = fetch_content(text_url)
+          strip_html(raw_content)
+        end
 
-          def fetch_content(url, redirect_limit = 5)
-            url = URI.parse(url) if url.instance_of? String
-            return @response_by_url[url] if (@response_by_url ||= {}).key?(url)
-            return if redirect_limit == 0
+        def self.fetch_content(url, redirect_limit = 5)
+          url = URI.parse(url) if url.instance_of? String
+          return @response_by_url[url] if (@response_by_url ||= {}).key?(url)
+          return if redirect_limit == 0
 
-            begin
-              response = Net::HTTP.get_response(url)
-              case response
-              when Net::HTTPSuccess     then
-                @response_by_url[url] = response.body
-              when Net::HTTPRedirection then
-                redirect_url = URI.parse(response["location"])
-                if redirect_url.relative?
-                  redirect_url = url + redirect_url
-                end
-                # The redirect might be to a URL that requires transformation, i.e. a github file
-                redirect_url = text_content_url(redirect_url.to_s)
-                @response_by_url[url] = fetch_content(redirect_url, redirect_limit - 1)
+          begin
+            response = Net::HTTP.get_response(url)
+            case response
+            when Net::HTTPSuccess     then
+              @response_by_url[url] = response.body
+            when Net::HTTPRedirection then
+              redirect_url = URI.parse(response["location"])
+              if redirect_url.relative?
+                redirect_url = url + redirect_url
               end
-            rescue
-              # Host might no longer exist or some other error, ignore
+              # The redirect might be to a URL that requires transformation, i.e. a github file
+              redirect_url = text_content_url(redirect_url.to_s)
+              @response_by_url[url] = fetch_content(redirect_url, redirect_limit - 1)
             end
+          rescue
+            # Host might no longer exist or some other error, ignore
           end
         end
       end

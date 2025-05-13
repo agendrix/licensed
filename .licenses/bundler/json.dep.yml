@@ -1,12 +1,12 @@
 ---
 name: json
-version: 2.6.3
+version: 2.11.3
 type: bundler
 summary: JSON Implementation for Ruby
-homepage: http://flori.github.com/json
+homepage: https://github.com/ruby/json
 license: other
 licenses:
-- sources: LICENSE
+- sources: COPYING
   text: "Ruby is copyrighted free software by Yukihiro Matsumoto <matz@netlab.jp>.\nYou
     can redistribute it and/or modify it under either the terms of the\n2-clause BSDL
     (see the file BSDL), or the conditions below:\n\n  1. You may make and give away
@@ -40,4 +40,14 @@ licenses:
     \    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR\n     PURPOSE.\n"
 - sources: README.md
   text: Ruby License, see https://www.ruby-lang.org/en/about/license.txt.
-notices: []
+notices:
+- sources: LEGAL
+  text: |-
+    # -*- rdoc -*-
+
+    = LEGAL NOTICE INFORMATION
+    --------------------------
+
+    All the files in this distribution are covered under either the Ruby's
+    license (see the file COPYING) or public-domain except some files
+    mentioned below.

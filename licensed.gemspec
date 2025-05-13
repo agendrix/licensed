@@ -21,15 +21,16 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.required_ruby_version = ">= 2.7.0"
+  spec.required_ruby_version = ">= 3.1.0"
 
+  spec.add_dependency "csv", "~> 3.3"
   spec.add_dependency "licensee", "~> 9.16"
   spec.add_dependency "thor", "~> 1.2"
   spec.add_dependency "pathname-common_prefix", "~> 0.0.1"
   spec.add_dependency "tomlrb", "~> 2.0"
   spec.add_dependency "ruby-xxHash", "~> 0.4.0"
   spec.add_dependency "parallel", "~> 1.22"
-  spec.add_dependency "reverse_markdown", "~> 2.1"
+  spec.add_dependency "reverse_markdown", ">= 2.1", "< 4.0"
   spec.add_dependency "json", "~> 2.6"
 
   spec.add_development_dependency "rake", "~> 13.0"
@@ -37,5 +38,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest-hooks", "~> 1.5"
   spec.add_development_dependency "mocha", "~> 2.0"
   spec.add_development_dependency "rubocop-github", "~> 0.20"
-  spec.add_development_dependency "byebug", "~> 11.1"
+  spec.add_development_dependency "byebug", "~> 12.0"
 end

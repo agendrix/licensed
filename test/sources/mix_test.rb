@@ -92,7 +92,7 @@ if Licensed::Shell.tool_available?("mix")
             {
               name: "foo",
               version: "1.2.3",
-              metadata: {"scm" => "hex", "repo" => "hexpm"}
+              metadata: { "scm" => "hex", "repo" => "hexpm" }
             }
           ]
           assert_equal expectation, parse_lockfile_contents(lockfile)
@@ -107,7 +107,7 @@ if Licensed::Shell.tool_available?("mix")
             {
               name: "absinthe",
               version: nil,
-              metadata: {"scm" => "hex"},
+              metadata: { "scm" => "hex" },
               error: "Could not extract data from mix.lock line: \"absinthe\": {:hex, 1, 2},\n"
             }
           ]

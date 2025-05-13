@@ -41,7 +41,7 @@ module Licensed
       end
 
       def message
-        extra = @stderr.empty?? "" : "#{@stderr.gsub(/^/, "        ")}"
+        extra = @stderr.empty? ? "" : "#{@stderr.gsub(/^/, "        ")}"
         "'#{escape_cmd}' exited with status #{@exitstatus}\n#{extra}"
       end
 
