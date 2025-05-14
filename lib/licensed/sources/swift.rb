@@ -53,7 +53,7 @@ module Licensed
 
       def dependency_path_for_url(url)
         last_path_component = URI(url).path.split("/").last.sub(/\.git$/, "").rstrip
-        File.join(@derived_data_path, "SourcePackages", "checkouts", last_path_component)
+        File.join(@derived_data_path, "ios", "SourcePackages", "checkouts", last_path_component)
       rescue URI::InvalidURIError
       end
 
@@ -69,7 +69,7 @@ module Licensed
 
       def set_derived_data_path
         build_dir =  JSON.parse(`xcodebuild -showBuildSettings $@ -json`).first.dig("buildSettings", "BUILD_DIR")
-        @derived_data_path = build_dir.delete_suffix("/Build/Products")
+        @derived_data_path = File.join(build_dir.delete_suffix("/build"), "DerivedData")
       end
     end
   end
