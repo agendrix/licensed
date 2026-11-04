@@ -168,7 +168,7 @@ module Licensed
                     }
                   }
                   dependencies {
-                    classpath "com.github.jk1:gradle-license-report:#{gradle_version >= Gem::Version.new("7.0") ? "2.0" : "1.17"}"
+                    classpath "com.github.jk1:gradle-license-report:#{license_report_plugin_version}"
                   }
                 }
 
@@ -202,6 +202,17 @@ module Licensed
             )
           f.close
           f
+        end
+
+        # 2.0 crashes on Gradle 9 (PomReader.readPomData signature mismatch); 3.1.2+ is tested on Gradle 9.
+        def license_report_plugin_version
+          if gradle_version >= Gem::Version.new("9.0")
+            "3.1.5"
+          elsif gradle_version >= Gem::Version.new("7.0")
+            "2.0"
+          else
+            "1.17"
+          end
         end
 
         # Returns the version of gradle used during execution
