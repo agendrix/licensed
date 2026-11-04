@@ -2,8 +2,8 @@
 require "test_helper"
 
 describe "licensed" do
-  let (:root) { File.expand_path("../../", __FILE__) }
-  let (:config_path) { File.join(root, "test/fixtures/cli/.licensed.yml") }
+  let(:root) { File.expand_path("../../", __FILE__) }
+  let(:config_path) { File.join(root, "test/fixtures/cli/.licensed.yml") }
 
   before do
     Dir.chdir root
@@ -82,16 +82,19 @@ describe "licensed" do
   end
 
   describe "version" do
-    it "outputs VERSION constant" do
+    it "outputs the current licensed version" do
       expected_out = "#{Licensed::VERSION}\n"
-      out, = Open3.capture2 "bundle exec exe/licensed version"
-      assert_equal out, expected_out
+      out, status = Open3.capture2 "bundle exec exe/licensed version"
+      assert status.success?
+      assert_equal expected_out, out.lines.last
 
-      out, = Open3.capture2 "bundle exec exe/licensed -v"
-      assert_equal out, expected_out
+      out, status = Open3.capture2 "bundle exec exe/licensed -v"
+      assert status.success?
+      assert_equal expected_out, out.lines.last
 
-      out, = Open3.capture2 "bundle exec exe/licensed --version"
-      assert_equal out, expected_out
+      out, status = Open3.capture2 "bundle exec exe/licensed --version"
+      assert status.success?
+      assert_equal expected_out, out.lines.last
     end
   end
 

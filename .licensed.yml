@@ -7,17 +7,30 @@ allowed:
 
 reviewed:
   bundler:
-    # bsd-3 and mit
-    - ffi
-  
     # ruby license
+    - base64
+    - bigdecimal
     - json
-    - httpclient
     - pathname-common_prefix
+    - securerandom
 
     # bsd-2 or ruby
+    - byebug
+    - csv
+    - drb
+    - io-console
+    - logger
+    - net-http
+    - ostruct
     - racc
+    - reline
     - ruby2_keywords
+    - uri
+
+    # mit, detected as other
+    - concurrent-ruby
+    - parser
+    - ruby-progressbar
 
     # dwtfyw
     - reverse_markdown

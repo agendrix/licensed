@@ -2,7 +2,7 @@
 require "test_helper"
 
 describe Licensed::Configuration do
-  let(:options) { { } }
+  let(:options) { {} }
   let(:config) { Licensed::Configuration.new(options) }
   let(:fixtures) { File.expand_path("../fixtures/config", __FILE__) }
 

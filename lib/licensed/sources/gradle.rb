@@ -13,11 +13,9 @@ module Licensed
       GRADLE_LICENSES_PATH     = ".gradle-licenses".freeze
       GRADLE_LICENSES_CSV_NAME = "licenses.csv".freeze
       class Dependency < Licensed::Dependency
-        class << self
-          # Cache and return the results of getting the license content.
-          def retrieve_license(url)
-            (@licenses ||= {})[url] ||= Net::HTTP.get(URI(url))
-          end
+        # Cache and return the results of getting the license content.
+        def self.retrieve_license(url)
+          (@licenses ||= {})[url] ||= Net::HTTP.get(URI(url))
         end
 
         def initialize(name:, version:, path:, url:, metadata: {})

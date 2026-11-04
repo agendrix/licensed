@@ -228,7 +228,7 @@ module Licensed
       # return the root directory name
       return root_path_parts[-1] if source_path_parts == root_path_parts
 
-      if source_path_parts[0..root_path_parts.size-1] != root_path_parts
+      if source_path_parts[0..root_path_parts.size - 1] != root_path_parts
         raise Licensed::Configuration::LoadError,
           "source_path must be a descendent of the app root to generate an app name from the relative source_path"
       end

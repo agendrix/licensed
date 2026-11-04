@@ -1,17 +1,16 @@
 ---
-name: rugged
-version: 1.5.1
+name: lint_roller
+version: 1.1.0
 type: bundler
-summary: Rugged is a Ruby binding to the libgit2 linkable library
-homepage: https://github.com/libgit2/rugged
+summary: A plugin specification for linter and formatter rulesets
+homepage: https://github.com/standardrb/lint_roller
 license: mit
 licenses:
-- sources: LICENSE
+- sources: LICENSE.txt
   text: |
-    The MIT License
+    The MIT License (MIT)
 
-    Copyright (c) 2016 GitHub, Inc
-    Copyright (c) Rugged Contributors
+    Copyright (c) 2023 Test Double, Inc.
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +29,4 @@ licenses:
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
-- sources: README.md
-  text: MIT. See LICENSE file.
 notices: []

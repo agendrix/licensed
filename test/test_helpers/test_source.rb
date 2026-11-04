@@ -42,6 +42,6 @@ class TestSourceWithDependencyVersionNames < TestSource
   end
 
   def initialize(config, name = DEFAULT_DEPENDENCY_NAME, metadata = {})
-    super(config, "#{name}@#{TestSource::DEPENDENCY_VERSION}", {"name" => name }.merge(metadata))
+    super(config, "#{name}@#{TestSource::DEPENDENCY_VERSION}", { "name" => name }.merge(metadata))
   end
 end

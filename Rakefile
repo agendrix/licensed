@@ -8,6 +8,7 @@ desc "Run source setup scripts"
 task :setup, [:arguments] do |task, args|
   arguments = args[:arguments].to_s.split
   force = arguments.include?("-f") ? "-f" : ""
+  failures = []
 
   Dir["script/source-setup/**/*"].each do |script|
     next if File.directory?(script)
@@ -15,7 +16,7 @@ task :setup, [:arguments] do |task, args|
     # green
     puts "\033[32mRunning #{script}.\e[0m"
 
-    if Bundler.with_clean_env { system(script, force) }
+    if Bundler.with_unbundled_env { system(script, force) }
       # green
       puts "\033[32mCompleted #{script}.\e[0m"
     elsif $?.exitstatus == 127
@@ -24,10 +25,13 @@ task :setup, [:arguments] do |task, args|
     else
       # red
       puts "\033[31mEncountered an error running #{script}.\e[0m"
+      failures << script
     end
 
     puts
   end
+
+  abort "Setup failed: #{failures.join(', ')}" unless failures.empty?
 end
 
 sources = Licensed::Sources::Source.sources.map { |source| source.full_type }
@@ -63,6 +67,7 @@ namespace :test do
     t.test_files = FileList["test/**/*_test.rb"].exclude("test/fixtures/**/*_test.rb")
                                                 .exclude("test/sources/*_test.rb")
                                                 .exclude("test/sources/**/*_test.rb")
+                                                .to_a + FileList["test/sources/source_test.rb", "test/sources/helpers/**/*_test.rb"].to_a
   end
 end
 
